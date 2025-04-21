@@ -1,8 +1,10 @@
 import { MantineProvider, Container } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createTheme,Button } from '@mantine/core';  
 
 // Import pages
 import Login from './pages/auth/Login';
+import Home from './pages/Home';
 // import Register from './pages/Register';
 // import Events from './pages/Events';
 // import EventDetails from './pages/EventDetails';
@@ -17,11 +19,20 @@ import Login from './pages/auth/Login';
 // import AdminRoute from './components/AdminRoute';
 
 function App() {
+
+  const theme = createTheme({
+    fontFamily: 'Inter, sans-serif',
+    fontFamilyMonospace: 'Monaco, Courier, monospace',
+    headings: { fontFamily: 'Greycliff CF, sans-serif' },
+    colorScheme: 'light',
+  });
+  
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
       <BrowserRouter>
         <Container size="lg" pt="md">
           <Routes>
+          <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/register" element={<Register />} /> */}
 

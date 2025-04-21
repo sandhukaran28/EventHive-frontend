@@ -1,78 +1,60 @@
 import {
-    Paper,
-    TextInput,
-    PasswordInput,
-    Button,
     Title,
     Text,
-    Anchor,
-    Container,
+    Button,
+    Box,
+    Flex,
     Divider,
-    Group,
-  } from '@mantine/core';
-  import { useForm } from '@mantine/form';
-  import { IconBrandGoogle } from '@tabler/icons-react';
+  } from "@mantine/core";
+  import { useNavigate } from "react-router-dom";
   
-  export default function Login() {
-    const form = useForm({
-      initialValues: {
-        email: '',
-        password: '',
-      },
-  
-      validate: {
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        password: (value) =>
-          value.length < 6 ? 'Password must be at least 6 characters' : null,
-      },
-    });
-  
-    const handleLogin = (values) => {
-      console.log('Login data:', values);
-      // Call your API here
-    };
+  export default function Home() {
+    const navigate = useNavigate();
   
     return (
-      <Container size={420} my={60}>
-        <Title align="center">Welcome back 👋</Title>
-        <Text color="dimmed" size="sm" align="center" mt={5}>
-          Don’t have an account yet?{' '}
-          <Anchor href="/register" size="sm">
-            Create one
-          </Anchor>
+      <Box
+        h="100vh"
+        style={{
+          background: `radial-gradient(
+            75.14% 111.46% at 50% -11.46%,
+            #b1d0fc 0%,
+            #f4d6ff 100%
+          )`,
+          display: "flex",
+          flexDirection: "column",
+          padding: "2rem",
+          color: "#1a1a1a",
+        }}
+      >
+        {/* Main Content */}
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          style={{ flex: 1, textAlign: "center" }}
+        >
+          <Title order={1} size="50px" mb="md">
+            Welcome to EventHive
+          </Title>
+          <Text size="lg" mb="lg" maw={500}>
+            Discover and book amazing events. Your experience starts here.
+          </Text>
+          <Button
+            size="md"
+            color="dark"
+            variant="outline"
+            onClick={() => navigate("/login")}
+          >
+            Get Started
+          </Button>
+        </Flex>
+  
+        {/* Footer */}
+        <Divider my="md" />
+        <Text align="center" size="xs" color="dimmed">
+          EventHive &copy; {new Date().getFullYear()}
         </Text>
-  
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <form onSubmit={form.onSubmit(handleLogin)}>
-            <TextInput
-              label="Email"
-              placeholder="you@email.com"
-              required
-              {...form.getInputProps('email')}
-            />
-  
-            <PasswordInput
-              label="Password"
-              placeholder="Your password"
-              required
-              mt="md"
-              {...form.getInputProps('password')}
-            />
-  
-            <Button fullWidth mt="xl" type="submit">
-              Log in
-            </Button>
-          </form>
-  
-          <Divider label="Or continue with" labelPosition="center" my="lg" />
-  
-          <Group grow mb="md" mt="md">
-            <Button variant="default" leftIcon={<IconBrandGoogle size={16} />}>
-              Google
-            </Button>
-          </Group>
-        </Paper>
-      </Container>
+      </Box>
     );
   }
   
