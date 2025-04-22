@@ -14,19 +14,20 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <Box h="100vh" bg="dark" c="white" className="landing">
+    <Box h="100vh"  className="landing" p="md">
       {/* Main Content */}
       <Box style={{ flex: 1, textAlign: "center",flexDirection:"column" }} className="flex">
         <Title order={1} size="64px" mb="md" style={{fontSize:"60px"}}>
           Welcome to EventHive
         </Title>
-        <Text size="lg" mb="lg" maw={500}>
+        <Text size="lg" mb="lg" maw={500} c={"gray"}>
           Discover and book amazing events. Your experience starts here.
         </Text>
         <Button
-         variant="light"
+         variant="filled"
          className="btnPrimary flex"
-         style={{marginTop:"20px"}}
+         size="xl"
+          color="eventhive"
     
           onClick={() => navigate("/login")}
         >

@@ -1,7 +1,7 @@
 import { MantineProvider, Container } from '@mantine/core';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme,Button } from '@mantine/core';  
-
+import '@mantine/core/styles.css';
 // Import pages
 import Login from './pages/auth/Login';
 import Home from './pages/Home';
@@ -24,13 +24,28 @@ function App() {
     fontFamily: 'Inter, sans-serif',
     fontFamilyMonospace: 'Monaco, Courier, monospace',
     headings: { fontFamily: 'Greycliff CF, sans-serif' },
-    colorScheme: 'light',
+    colorScheme: 'light', 
+    colors: {
+      eventhive: [
+        '#f4d6ff', // lightest
+        '#e3c0f5',
+        '#d2aaeb',
+        '#b1d0fc', // mid
+        '#7289da', // primary
+        '#5b6bc2',
+        '#4450a8',
+        '#2d378f',
+        '#1b2575',
+        '#0a135c'  // darkest
+      ],
+    },
+    primaryColor: 'eventhive',
   });
   
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
       <BrowserRouter>
-        <Container size="lg" pt="md">
+        <Container fluid  size="lg"  p={0}>
           <Routes>
           <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
