@@ -13,26 +13,59 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconUser, IconLock } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
+import { useState } from "react";
+import axios from "../../api/axiosconfig";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const { login } = useAuth();
+
   const form = useForm({
     initialValues: {
-      username: "",
+      email: "",
       password: "",
     },
     validate: {
-      username: (value) => (value.length < 3 ? "Username is too short" : null),
-      password: (value) =>
-        value.length < 6 ? "Password must be at least 6 characters" : null,
+      email: (value) =>
+        /^\S+@\S+$/.test(value) ? null : "Invalid email format",
     },
   });
 
-  const handleLogin = (values) => {
-    console.log("Login Data:", values);
-    // call API here
+  const handleLogin = async (values) => {
+    try {
+      setLoading(true);
+      setServerError("");
+  
+      const res = await axios.post("/auth/login", values);
+      console.log("Logged in:", res.data);
+  
+      const userData = {
+        token: res.data.token,
+        user: res.data.user,
+      };
+  
+      login(userData);
+      setLoggedIn(true);
+  
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (err) {
+      console.error("Login failed:", err.response?.data || err.message);
+      setServerError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   return (
     <Box
@@ -84,64 +117,79 @@ export default function Login() {
                 Your gateway to discovering and managing events effortlessly.
               </Text>
 
-              <form
-                onSubmit={form.onSubmit(handleLogin)}
-                className="login-form"
-              >
-                <TextInput
-                  label="Email"
-                  placeholder="Email"
-                  type="email"
-                  required
-                  styles={{
-                    input: {
-                      backgroundColor: "white",
-                      borderRadius: "999px",
-                      textAlign: "left",
-                      fontWeight: 500,
-                      marginBottom: 4,
-                    },
-                  }}
-                  {...form.getInputProps("username")}
-                />
-
-                <PasswordInput
-                  label="Password"
-                  placeholder="Enter your password"
-                  icon={<IconLock size={18} />}
-                  required
-                  mt="md"
-                  styles={{
-                    input: {
-                      backgroundColor: "white",
-                      borderRadius: "999px",
-                      paddingLeft: "2.75rem",
-                      textAlign: "left",
-                    },
-                  }}
-                  {...form.getInputProps("password")}
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  mt="xl"
-                  styles={{
-                    root: {
-                      backgroundColor: "#b1d0fc",
-                      color: "#1a1a1a",
-                      fontWeight: 600,
-                      transition: "transform 0.2s ease",
-                      "&:hover": {
-                        transform: "scale(1.03)",
-                        backgroundColor: "#a2c3f6",
-                      },
-                    },
-                  }}
+              {loggedIn ? (
+                <Text color="green" align="center" mt="md" fw={600}>
+                  ✅ Login successful! Redirecting...
+                </Text>
+              ) : (
+                <form
+                  onSubmit={form.onSubmit(handleLogin)}
+                  className="login-form"
                 >
-                  Login
-                </Button>
-              </form>
+                  <TextInput
+                    label="Email"
+                    placeholder="Email"
+                    type="email"
+                    required
+                    labelProps={{ style: { textAlign: "left" } }}
+                    styles={{
+                      input: {
+                        backgroundColor: "white",
+                        borderRadius: "999px",
+                        textAlign: "left",
+                        fontWeight: 500,
+                        marginBottom: 4,
+                      },
+                    }}
+                    {...form.getInputProps("email")}
+                  />
+
+                  <PasswordInput
+                    label="Password"
+                    placeholder="Enter your password"
+                    icon={<IconLock size={18} />}
+                    required
+                    mt="md"
+                    labelProps={{ style: { textAlign: "left" } }}
+                    styles={{
+                      input: {
+                        backgroundColor: "white",
+                        borderRadius: "999px",
+                        paddingLeft: "2.75rem",
+                        textAlign: "left",
+                      },
+                    }}
+                    {...form.getInputProps("password")}
+                  />
+
+                  {serverError && (
+                    <Text color="red" align="center" mt="md">
+                      {serverError}
+                    </Text>
+                  )}
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    mt="xl"
+                    loading={loading}
+                    styles={{
+                      root: {
+                        backgroundColor: "#b1d0fc",
+                        color: "#1a1a1a",
+                        fontWeight: 600,
+                        transition: "transform 0.2s ease",
+                        "&:hover": {
+                          transform: "scale(1.03)",
+                          backgroundColor: "#a2c3f6",
+                        },
+                      },
+                    }}
+                  >
+                    Login
+                  </Button>
+                </form>
+              )}
 
               <Text size="sm" align="center" mt="md" color="dimmed">
                 Don’t have an account?{" "}

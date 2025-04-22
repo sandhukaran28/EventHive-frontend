@@ -5,18 +5,18 @@ import '@mantine/core/styles.css';
 // Import pages
 import Login from './pages/auth/Login';
 import Home from './pages/Home';
-// import Register from './pages/Register';
+import Register from './pages/auth/Register';
 // import Events from './pages/Events';
 // import EventDetails from './pages/EventDetails';
-// import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard';
 // import AdminPanel from './pages/admin/AdminPanel';
 // import CreateEvent from './pages/admin/CreateEvent';
 // import EditEvent from './pages/admin/EditEvent';
 // import NotFound from './pages/NotFound';
 
 // Import route guards
-// import ProtectedRoute from './components/ProtectedRoute';
-// import AdminRoute from './components/AdminRoute';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import AdminRoute from './components/auth/AdminRoute';
 
 function App() {
 
@@ -49,21 +49,21 @@ function App() {
           <Routes>
           <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/register" element={<Register />} /> */}
+            <Route path="/register" element={<Register />} />
 
-            {/* <Route element={<ProtectedRoute />}>
-              <Route path="/events" element={<Events />} />
-              <Route path="/events/:id" element={<EventDetails />} />
+            <Route element={<ProtectedRoute />}>
+              {/* <Route path="/events" element={<Events />} />
+              <Route path="/events/:id" element={<EventDetails />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
 
             <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminPanel />} />
+              {/* <Route path="/admin" element={<AdminPanel />} />
               <Route path="/admin/create" element={<CreateEvent />} />
-              <Route path="/admin/edit/:id" element={<EditEvent />} />
+              <Route path="/admin/edit/:id" element={<EditEvent />} /> */}
             </Route>
 
-            <Route path="*" element={<NotFound />} /> */}
+            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </Container>
       </BrowserRouter>
