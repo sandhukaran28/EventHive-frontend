@@ -6,8 +6,7 @@ import '@mantine/core/styles.css';
 import Login from './pages/auth/Login';
 import Home from './pages/Home';
 import Register from './pages/auth/Register';
-// import Events from './pages/Events';
-// import EventDetails from './pages/EventDetails';
+import EventDetails from './pages/EventDetails';
 import Dashboard from './pages/Dashboard';
 // import AdminPanel from './pages/admin/AdminPanel';
 // import CreateEvent from './pages/admin/CreateEvent';
@@ -52,8 +51,7 @@ function App() {
             <Route path="/register" element={<Register />} />
 
             <Route element={<ProtectedRoute />}>
-              {/* <Route path="/events" element={<Events />} />
-              <Route path="/events/:id" element={<EventDetails />} /> */}
+              <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
 

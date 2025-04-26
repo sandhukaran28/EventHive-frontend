@@ -1,107 +1,274 @@
 import {
-    Box,
-    Button,
-    Container,
-    Grid,
-    Group,
-    Paper,
-    Text,
-    Title,
-  } from "@mantine/core";
-  import { IconCalendarEvent, IconPlus, IconUser } from "@tabler/icons-react";
-  
-  export default function Dashboard() {
-    const user = {
-      name: "Karan", // Replace this with dynamic user info from context/auth later
-      role: "user", // or 'admin'
+  Box,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Paper,
+  Text,
+  Title,
+  Flex,
+  Card,
+  Avatar,
+  Badge,
+  Loader,
+  Center,
+} from "@mantine/core";
+import { IconCalendarEvent } from "@tabler/icons-react";
+import { useAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "../api/axiosconfig";
+import Footer from "../components/Footer";
+
+export default function Dashboard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`/events?page=${currentPage}`, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+        setEvents(response.data.events);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-  
-    return (
-      <Box
+
+    if (user?.token) {
+      fetchEvents();
+    }
+  }, [user?.token, currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  return (
+    <Box
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f9f9fb",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Top Nav Bar */}
+      <Paper
+        p="md"
+        radius={0}
         style={{
-          minHeight: "100vh",
-          backgroundColor: "#f9f9fb",
-          padding: "2rem 0",
+          backgroundColor: "#f4d6ff",
+          borderBottom: "1px solid #b1d0fc",
+          backdropFilter: "blur(8px)",
         }}
       >
         <Container size="lg">
-          <Title order={2} mb="sm">
-            Welcome, {user.name} 👋
-          </Title>
-  
-          <Text size="sm" color="dimmed" mb="xl">
-            Here's what's happening with your events today.
-          </Text>
-  
-          <Grid gutter="md">
-            {/* Upcoming Events */}
-            <Grid.Col span={{ base: 12, md: 8 }}>
-              <Paper
-                p="lg"
-                radius="md"
-                shadow="sm"
-                style={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #e2e8f0",
+          <Flex justify="space-between" align="center">
+            <Title order={3} style={{ color: "#1a1a1a", fontWeight: 700 }}>
+              EventHive
+            </Title>
+            <Group spacing="md">
+              <Button
+                variant="outline"
+                styles={{
+                  root: {
+                    color: "#1a1a1a",
+                    borderColor: "#1a1a1a",
+                    fontWeight: 600,
+                    "&:hover": { backgroundColor: "#d0d0d0" },
+                  },
                 }}
               >
-                <Group mb="md">
-                  <IconCalendarEvent size={22} />
-                  <Text fw={500}>Upcoming Events</Text>
-                </Group>
-  
-                <Text size="sm" color="dimmed">
-                  No events booked yet. Once you register, they’ll show up here.
-                </Text>
-              </Paper>
-            </Grid.Col>
-  
-            {/* Quick Actions */}
-            <Grid.Col span={{ base: 12, md: 4 }}>
-              <Paper
-                p="lg"
-                radius="md"
-                shadow="sm"
-                style={{
-                  backgroundColor: "#f4d6ff",
-                  border: "1px solid #b1d0fc",
-                  backdropFilter: "blur(8px)",
+                Profile
+              </Button>
+              <Button
+                variant="filled"
+                styles={{
+                  root: {
+                    backgroundColor: "#b1d0fc",
+                    color: "#1a1a1a",
+                    fontWeight: 600,
+                    "&:hover": { backgroundColor: "#a2c3f6" },
+                  },
                 }}
               >
-                <Text fw={500} mb="md">
-                  Quick Actions
-                </Text>
-                <Group direction="column" spacing="sm">
-                  <Button
-                    fullWidth
-                    leftIcon={<IconCalendarEvent size={18} />}
-                    color="eventhive.3"
-                    variant="light"
-                  >
-                    Book an Event
-                  </Button>
-                  {user.role === "admin" && (
-                    <Button
-                      fullWidth
-                      leftIcon={<IconPlus size={18} />}
-                      color="eventhive.3"
-                    >
-                      Create Event
-                    </Button>
-                  )}
-                  <Button
-                    fullWidth
-                    leftIcon={<IconUser size={18} />}
-                    variant="outline"
-                  >
-                    Profile
-                  </Button>
-                </Group>
-              </Paper>
-            </Grid.Col>
-          </Grid>
+                Logout
+              </Button>
+            </Group>
+          </Flex>
         </Container>
-      </Box>
-    );
-  }
-  
+      </Paper>
+
+      {/* Main Dashboard Content */}
+      <Container size="lg" mt="xl" style={{ flex: 1 }}>
+        <Title order={2} mb="sm" color="#1a1a1a">
+          Welcome, {user?.user?.name || "Guest"} 👋
+        </Title>
+
+        <Text size="sm" color="dimmed" mb="xl">
+          Here's what's happening with your events today.
+        </Text>
+
+        <Grid gutter="md">
+          <Grid.Col span={12}>
+            <Group mb="md">
+              <IconCalendarEvent size={22} />
+              <Text fw={500}>Upcoming Events</Text>
+            </Group>
+
+            {loading ? (
+              <Center>
+                <Loader color="eventhive.3" size="lg" />
+              </Center>
+            ) : events.length > 0 ? (
+              <>
+                <Grid>
+                  {events.map((event) => {
+                    const availableSeats = event.capacity - (event.attendees?.length || 0);
+                    const ticketsBooked = event.attendees?.filter((id) => id == user.user.id).length || 0;
+
+                    return (
+                      <Grid.Col key={event._id} span={{ base: 12, md: 6 }}>
+                        <Card
+                          shadow="md"
+                          p="lg"
+                          radius="md"
+                          withBorder
+                          style={{
+                            backgroundColor: "#fff",
+                            border: "1px solid #e2e8f0",
+                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.02)";
+                            e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.1)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.05)";
+                          }}
+                        >
+                          <Group mb="md" position="apart">
+                            <Avatar radius="xl" color="eventhive.3">
+                              {event.title.charAt(0)}
+                            </Avatar>
+                            <Badge
+                              color="eventhive.3"
+                              variant="filled"
+                              size="sm"
+                              styles={{
+                                root: {
+                                  backgroundColor: "#a2c3f6",
+                                  color: "#1a1a1a",
+                                  fontWeight: 500,
+                                },
+                              }}
+                            >
+                              {new Date(event.date).toDateString()}
+                            </Badge>
+                          </Group>
+
+                          <Text fw={600} size="lg" mb="xs" color="#1a1a1a">
+                            {event.title}
+                          </Text>
+
+                          <Text size="sm" color="dimmed" mb="sm">
+                            {event.location}
+                          </Text>
+
+                          <Text size="xs" color="gray" mb="xs">
+                            Available Seats: <b>{availableSeats}</b>
+                          </Text>
+
+                          {ticketsBooked > 0 ?  
+                            <Text size="xs" c="green" mt="xs">
+                              You have booked: <b>{ticketsBooked}</b> ticket{ticketsBooked > 1 ? "s" : ""}
+                            </Text> :
+                             <Text size="xs" c="gray" mt="xs">
+                              No tickets booked yet. Book now!
+                           </Text>
+                          }
+
+                          <Button
+                            fullWidth
+                            mt="sm"
+                            variant="filled"
+                            color="eventhive.3"
+                            styles={{
+                              root: {
+                                backgroundColor: "#b1d0fc",
+                                color: "#1a1a1a",
+                                fontWeight: 600,
+                                "&:hover": {
+                                  backgroundColor: "#a2c3f6",
+                                },
+                              },
+                            }}
+                            onClick={() => navigate(`/events/${event._id}`)}
+                          >
+                            View Details
+                          </Button>
+                        </Card>
+                      </Grid.Col>
+                    );
+                  })}
+                </Grid>
+
+                {/* Pagination Buttons */}
+                <Group position="center" mt="lg">
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <Text size="sm" fw={500}>
+                    Page {currentPage} of {totalPages}
+                  </Text>
+                  <Button
+                    variant="outline"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </Group>
+              </>
+            ) : (
+              <Paper p="lg" radius="md" shadow="sm" mt="md">
+                <Text size="sm" color="dimmed" align="center">
+                  No upcoming events. Start booking today!
+                </Text>
+              </Paper>
+            )}
+          </Grid.Col>
+        </Grid>
+      </Container>
+
+      {/* Footer */}
+      <Footer />
+    </Box>
+  );
+}
