@@ -1,7 +1,21 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Box, Button, Container, Paper, Title, Flex, Burger, Text } from "@mantine/core";
-import { IconLayoutDashboard, IconPlus, IconUsers, IconCalendarStats } from "@tabler/icons-react";
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Title,
+  Flex,
+  Burger,
+  Text,
+} from "@mantine/core";
+import {
+  IconLayoutDashboard,
+  IconPlus,
+  IconUsers,
+  IconCalendarStats,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 export default function AdminLayout() {
@@ -13,10 +27,9 @@ export default function AdminLayout() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-    if (window.innerWidth >= 768) {
-      setSidebarOpen(true);
-    }
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    setSidebarOpen(!mobile); // Collapse sidebar if mobile
   };
 
   useEffect(() => {
@@ -32,7 +45,14 @@ export default function AdminLayout() {
   ];
 
   return (
-    <Box style={{ minHeight: "100vh", backgroundColor: "#f9f9fb", display: "flex", flexDirection: "column" }}>
+    <Box
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f9f9fb",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Top Navbar */}
       <Paper
         p="md"
@@ -90,7 +110,7 @@ export default function AdminLayout() {
         <Paper
           p="md"
           style={{
-            width: isMobile ? (sidebarOpen ? 260 : 80) : 260,
+            width: isMobile ? (sidebarOpen ? 260 : 90) : 260,
             transition: "width 0.3s ease",
             borderRight: "1px solid #e0e0e0",
             backgroundColor: "#f4d6ff",
@@ -101,43 +121,52 @@ export default function AdminLayout() {
           }}
         >
           {navItems.map((item) => {
-  const isActive = location.pathname === item.path;
-  const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
 
-  return (
-    <Button
-      key={item.label}
-      variant="subtle"
-      fullWidth
-      onClick={() => navigate(item.path)}
-      styles={{
-        root: {
-          justifyContent: "flex-start",
-          alignItems: "center",  // <<< make icon + text vertically aligned
-          height: "44px",         // <<< fix height
-          paddingLeft: "12px",
-          gap: "10px",            // <<< some gap between icon and text
-          backgroundColor: "transparent",
-          color: "#1a1a1a",
-          "&:hover": {
-            backgroundColor: "#e3c0f5",
-          },
-        },
-      }}
-    >
-      <Flex align="center" gap="sm" style={{ width: "100%" }}>
-        <Box style={{ width: 24, display: "flex", justifyContent: "center" }}>
-          <Icon size={20} />
-        </Box>
-        {sidebarOpen && (
-          <Text size="sm" fw={600}>
-            {item.label}
-          </Text>
-        )}
-      </Flex>
-    </Button>
-  );
-})}
+            return (
+              <Button
+              key={item.label}
+              variant="subtle"
+              fullWidth
+              onClick={() => navigate(item.path)}
+              styles={{
+                root: {
+                  justifyContent: sidebarOpen ? "flex-start" : "flex-start",
+                  padding: "10px 16px",
+                  borderRadius: "8px",
+                  height: "48px",
+                  backgroundColor: isActive ? "#e3c0f5" : "transparent",
+                  "&:hover": {
+                    backgroundColor: "#e3c0f5",
+                  },
+                },
+              }}
+            >
+              <Flex align="center" gap="12px" style={{ width: "100%" }}>
+                <Box
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon size={20} />
+                </Box>
+            
+                {sidebarOpen && (
+                  <Text size="sm" fw={600} style={{ whiteSpace: "nowrap" }}>
+                    {item.label}
+                  </Text>
+                )}
+              </Flex>
+            </Button>
+            
+            
+            );
+          })}
         </Paper>
 
         {/* Main Page Content */}
