@@ -16,6 +16,8 @@ import Dashboard from './pages/Dashboard';
 // Import route guards
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoute from './components/auth/AdminRoute';
+import MyBookings from './pages/MyBookings';
+import Profile from './pages/Profile';
 
 function App() {
 
@@ -53,6 +55,8 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/myBookings" element={<MyBookings />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
 
             <Route element={<AdminRoute />}>

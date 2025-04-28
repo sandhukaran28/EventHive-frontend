@@ -22,7 +22,7 @@ import axios from "../api/axiosconfig";
 import Footer from "../components/Footer";
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user,logout } = useAuth();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,9 +99,26 @@ export default function Dashboard() {
                     "&:hover": { backgroundColor: "#d0d0d0" },
                   },
                 }}
+                onClick={() => navigate("/mybookings")}
+              >
+                My Bookings
+              </Button>
+
+              <Button
+                variant="outline"
+                styles={{
+                  root: {
+                    color: "#1a1a1a",
+                    borderColor: "#1a1a1a",
+                    fontWeight: 600,
+                    "&:hover": { backgroundColor: "#d0d0d0" },
+                  },
+                }}
+                onClick={() => navigate("/profile")}
               >
                 Profile
               </Button>
+
               <Button
                 variant="filled"
                 styles={{
@@ -112,6 +129,11 @@ export default function Dashboard() {
                     "&:hover": { backgroundColor: "#a2c3f6" },
                   },
                 }}
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+              
               >
                 Logout
               </Button>
@@ -145,8 +167,10 @@ export default function Dashboard() {
               <>
                 <Grid>
                   {events.map((event) => {
-                    const availableSeats = event.capacity - (event.attendees?.length || 0);
-                    const ticketsBooked = event.attendees?.filter((id) => id == user.user.id).length || 0;
+                    const availableSeats = event.capacity;
+                    const ticketsBooked =
+                      event.attendees?.filter((id) => id == user.user.id)
+                        .length || 0;
 
                     return (
                       <Grid.Col key={event._id} span={{ base: 12, md: 6 }}>
@@ -158,15 +182,18 @@ export default function Dashboard() {
                           style={{
                             backgroundColor: "#fff",
                             border: "1px solid #e2e8f0",
-                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                            transition:
+                              "transform 0.2s ease, box-shadow 0.2s ease",
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.transform = "scale(1.02)";
-                            e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.1)";
+                            e.currentTarget.style.boxShadow =
+                              "0 10px 25px rgba(0,0,0,0.1)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.transform = "scale(1)";
-                            e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.05)";
+                            e.currentTarget.style.boxShadow =
+                              "0 4px 10px rgba(0,0,0,0.05)";
                           }}
                         >
                           <Group mb="md" position="apart">
@@ -193,22 +220,24 @@ export default function Dashboard() {
                             {event.title}
                           </Text>
 
-                          <Text size="sm" color="dimmed" mb="sm">
+                          <Text size="sm" c="dimmed" mb="sm">
                             {event.location}
                           </Text>
 
-                          <Text size="xs" color="gray" mb="xs">
+                          <Text size="xs" c="gray" mb="xs">
                             Available Seats: <b>{availableSeats}</b>
                           </Text>
 
-                          {ticketsBooked > 0 ?  
+                          {ticketsBooked > 0 ? (
                             <Text size="xs" c="green" mt="xs">
-                              You have booked: <b>{ticketsBooked}</b> ticket{ticketsBooked > 1 ? "s" : ""}
-                            </Text> :
-                             <Text size="xs" c="gray" mt="xs">
+                              You have booked: <b>{ticketsBooked}</b> ticket
+                              {ticketsBooked > 1 ? "s" : ""}
+                            </Text>
+                          ) : (
+                            <Text size="xs" c="gray" mt="xs">
                               No tickets booked yet. Book now!
-                           </Text>
-                          }
+                            </Text>
+                          )}
 
                           <Button
                             fullWidth

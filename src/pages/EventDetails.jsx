@@ -62,20 +62,20 @@ export default function EventDetails() {
   if (!event) {
     return (
       <Center h="100vh">
-        <Text color="red">Event not found!</Text>
+        <Text c="red">Event not found!</Text>
       </Center>
     );
   }
 
   // 🧠 Calculate Available Seats
-  const availableSeats = event.capacity - (event.attendees?.length || 0);
+  const availableSeats = event.capacity;
 
   const handleBooking = async () => {
     if (quantity > availableSeats) {
       setBookingError("You cannot book more seats than available.");
       return;
     }
-
+    console.log("Booking event:", id, "Quantity:", quantity,availableSeats);
     try {
       const res = await axios.post(
         "/bookings",
