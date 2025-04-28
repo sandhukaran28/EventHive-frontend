@@ -1,57 +1,60 @@
-import { MantineProvider, Container } from '@mantine/core';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { createTheme,Button } from '@mantine/core';  
-import '@mantine/core/styles.css';
-// Import pages
-import Login from './pages/auth/Login';
-import Home from './pages/Home';
-import Register from './pages/auth/Register';
-import EventDetails from './pages/EventDetails';
-import Dashboard from './pages/Dashboard';
-// import AdminPanel from './pages/admin/AdminPanel';
-// import CreateEvent from './pages/admin/CreateEvent';
-// import EditEvent from './pages/admin/EditEvent';
-// import NotFound from './pages/NotFound';
+import { MantineProvider, Container } from "@mantine/core";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createTheme } from "@mantine/core";
+import "@mantine/core/styles.css";
 
-// Import route guards
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import AdminRoute from './components/auth/AdminRoute';
-import MyBookings from './pages/MyBookings';
-import Profile from './pages/Profile';
+// Pages
+import Login from "./pages/auth/Login";
+import Home from "./pages/Home";
+import Register from "./pages/auth/Register";
+import EventDetails from "./pages/EventDetails";
+import Dashboard from "./pages/Dashboard";
+import MyBookings from "./pages/MyBookings";
+import Profile from "./pages/Profile";
+import EventForm from "./pages/admin/EventForm";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminBookings from "./pages/admin/AdminBookings";
+
+// Guards and Layout
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AdminRoute from "./components/auth/AdminRoute";
+import AdminLayout from "./components/AdminLayout";
+
 
 function App() {
-
   const theme = createTheme({
-    fontFamily: 'Inter, sans-serif',
-    fontFamilyMonospace: 'Monaco, Courier, monospace',
-    headings: { fontFamily: 'Greycliff CF, sans-serif' },
-    colorScheme: 'light', 
+    fontFamily: "Inter, sans-serif",
+    fontFamilyMonospace: "Monaco, Courier, monospace",
+    headings: { fontFamily: "Greycliff CF, sans-serif" },
+    colorScheme: "light",
     colors: {
       eventhive: [
-        '#f4d6ff', // lightest
-        '#e3c0f5',
-        '#d2aaeb',
-        '#b1d0fc', // mid
-        '#7289da', // primary
-        '#5b6bc2',
-        '#4450a8',
-        '#2d378f',
-        '#1b2575',
-        '#0a135c'  // darkest
+        "#f4d6ff",
+        "#e3c0f5",
+        "#d2aaeb",
+        "#b1d0fc",
+        "#7289da",
+        "#5b6bc2",
+        "#4450a8",
+        "#2d378f",
+        "#1b2575",
+        "#0a135c",
       ],
     },
-    primaryColor: 'eventhive',
+    primaryColor: "eventhive",
   });
-  
+
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
       <BrowserRouter>
-        <Container fluid  size="lg"  p={0}>
+        <Container fluid size="lg" p={0}>
           <Routes>
-          <Route path="/" element={<Home />} />
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
+            {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -59,12 +62,17 @@ function App() {
               <Route path="/profile" element={<Profile />} />
             </Route>
 
+            {/* Admin Routes */}
             <Route element={<AdminRoute />}>
-              {/* <Route path="/admin" element={<AdminPanel />} />
-              <Route path="/admin/create" element={<CreateEvent />} />
-              <Route path="/admin/edit/:id" element={<EditEvent />} /> */}
+              <Route element={<AdminLayout />}>
+                <Route path="/create-event" element={<EventForm />} />
+                <Route path="/edit-event/:id" element={<EventForm />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/bookings" element={<AdminBookings />} />
+              </Route>
             </Route>
 
+            {/* Optional Not Found Page */}
             {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </Container>

@@ -13,6 +13,7 @@ import {
   Badge,
   Loader,
   Center,
+  Modal,
 } from "@mantine/core";
 import { IconCalendarEvent } from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext";
@@ -22,12 +23,14 @@ import axios from "../api/axiosconfig";
 import Footer from "../components/Footer";
 
 export default function Dashboard() {
-  const { user,logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -64,6 +67,31 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteClick = (eventId) => {
+    setEventToDelete(eventId);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDeleteEvent = async () => {
+    try {
+      await axios.delete(`/events/${eventToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+
+      setEvents((prev) => prev.filter((e) => e._id !== eventToDelete));
+      setDeleteModalOpen(false);
+      setEventToDelete(null);
+    } catch (error) {
+      console.error(
+        "Error deleting event:",
+        error.response?.data || error.message
+      );
+      alert("Failed to delete event. Please try again.");
+    }
+  };
+
   return (
     <Box
       style={{
@@ -85,42 +113,85 @@ export default function Dashboard() {
       >
         <Container size="lg">
           <Flex justify="space-between" align="center">
-            <Title order={3} style={{ color: "#1a1a1a", fontWeight: 700 }}>
+            <Title
+              order={3}
+              style={{ color: "#1a1a1a", fontWeight: 700, cursor: "pointer" }}
+              onClick={() => navigate("/dashboard")}
+            >
               EventHive
             </Title>
             <Group spacing="md">
-              <Button
-                variant="outline"
-                styles={{
-                  root: {
-                    color: "#1a1a1a",
-                    borderColor: "#1a1a1a",
-                    fontWeight: 600,
-                    "&:hover": { backgroundColor: "#d0d0d0" },
-                  },
-                }}
-                onClick={() => navigate("/mybookings")}
-              >
-                My Bookings
-              </Button>
+              {user?.user?.isAdmin ? (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/create-event")}
+                    styles={{
+                      root: {
+                        color: "#1a1a1a",
+                        borderColor: "#1a1a1a",
+                        fontWeight: 600,
+                        "&:hover": { backgroundColor: "#d0d0d0" },
+                      },
+                    }}
+                  >
+                    Create Event
+                  </Button>
 
-              <Button
-                variant="outline"
-                styles={{
-                  root: {
-                    color: "#1a1a1a",
-                    borderColor: "#1a1a1a",
-                    fontWeight: 600,
-                    "&:hover": { backgroundColor: "#d0d0d0" },
-                  },
-                }}
-                onClick={() => navigate("/profile")}
-              >
-                Profile
-              </Button>
+                  <Button
+                    variant="outline"
+                    styles={{
+                      root: {
+                        color: "#1a1a1a",
+                        borderColor: "#1a1a1a",
+                        fontWeight: 600,
+                        "&:hover": { backgroundColor: "#d0d0d0" },
+                      },
+                    }}
+                    onClick={() => navigate("/admin/users")}
+                  >
+                    Manage Users
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/mybookings")}
+                    styles={{
+                      root: {
+                        color: "#1a1a1a",
+                        borderColor: "#1a1a1a",
+                        fontWeight: 600,
+                        "&:hover": { backgroundColor: "#d0d0d0" },
+                      },
+                    }}
+                  >
+                    My Bookings
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/profile")}
+                    styles={{
+                      root: {
+                        color: "#1a1a1a",
+                        borderColor: "#1a1a1a",
+                        fontWeight: 600,
+                        "&:hover": { backgroundColor: "#d0d0d0" },
+                      },
+                    }}
+                  >
+                    Profile
+                  </Button>
+                </>
+              )}
 
               <Button
                 variant="filled"
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
                 styles={{
                   root: {
                     backgroundColor: "#b1d0fc",
@@ -129,11 +200,6 @@ export default function Dashboard() {
                     "&:hover": { backgroundColor: "#a2c3f6" },
                   },
                 }}
-                onClick={() => {
-                  logout();
-                  navigate("/login");
-                }}
-              
               >
                 Logout
               </Button>
@@ -228,36 +294,46 @@ export default function Dashboard() {
                             Available Seats: <b>{availableSeats}</b>
                           </Text>
 
-                          {ticketsBooked > 0 ? (
-                            <Text size="xs" c="green" mt="xs">
-                              You have booked: <b>{ticketsBooked}</b> ticket
-                              {ticketsBooked > 1 ? "s" : ""}
-                            </Text>
+                          {/* Different Buttons for Admin vs User */}
+                          {user?.user?.isAdmin ? (
+                            <Group mt="md" grow>
+                              <Button
+                                variant="outline"
+                                onClick={() =>
+                                  navigate(`/edit-event/${event._id}`)
+                                }
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="filled"
+                                color="red"
+                                onClick={() => handleDeleteClick(event._id)}
+                              >
+                                Delete
+                              </Button>
+                            </Group>
                           ) : (
-                            <Text size="xs" c="gray" mt="xs">
-                              No tickets booked yet. Book now!
-                            </Text>
-                          )}
-
-                          <Button
-                            fullWidth
-                            mt="sm"
-                            variant="filled"
-                            color="eventhive.3"
-                            styles={{
-                              root: {
-                                backgroundColor: "#b1d0fc",
-                                color: "#1a1a1a",
-                                fontWeight: 600,
-                                "&:hover": {
-                                  backgroundColor: "#a2c3f6",
+                            <Button
+                              fullWidth
+                              mt="sm"
+                              variant="filled"
+                              color="eventhive.3"
+                              styles={{
+                                root: {
+                                  backgroundColor: "#b1d0fc",
+                                  color: "#1a1a1a",
+                                  fontWeight: 600,
+                                  "&:hover": {
+                                    backgroundColor: "#a2c3f6",
+                                  },
                                 },
-                              },
-                            }}
-                            onClick={() => navigate(`/events/${event._id}`)}
-                          >
-                            View Details
-                          </Button>
+                              }}
+                              onClick={() => navigate(`/events/${event._id}`)}
+                            >
+                              View Details
+                            </Button>
+                          )}
                         </Card>
                       </Grid.Col>
                     );
@@ -298,6 +374,28 @@ export default function Dashboard() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Confirm Delete"
+        centered
+      >
+        <Text mb="md">
+          Are you sure you want to delete this event? This action cannot be
+          undone.
+        </Text>
+
+        <Group position="right">
+          <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+            Cancel
+          </Button>
+          <Button color="red" onClick={confirmDeleteEvent}>
+            Delete
+          </Button>
+        </Group>
+      </Modal>
     </Box>
   );
 }
