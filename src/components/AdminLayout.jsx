@@ -38,8 +38,8 @@ export default function AdminLayout() {
   }, []);
 
   const navItems = [
-    { label: "Dashboard", icon: IconLayoutDashboard, path: "/dashboard" },
-    { label: "Create Event", icon: IconPlus, path: "/create-event" },
+    { label: "Dashboard", icon: IconLayoutDashboard, path: "/admin/dashboard" },
+    { label: "Create Event", icon: IconPlus, path: "/admin/create-event" },
     { label: "Users", icon: IconUsers, path: "/admin/users" },
     { label: "Bookings", icon: IconCalendarStats, path: "/admin/bookings" },
   ];
@@ -105,7 +105,7 @@ export default function AdminLayout() {
       </Paper>
 
       {/* Admin Content */}
-      <Flex style={{ flex: 1 }}>
+      <Flex style={{ flex: 1, overflow: "auto" }}>
         {/* Sidebar */}
         <Paper
           p="md"
@@ -126,51 +126,50 @@ export default function AdminLayout() {
 
             return (
               <Button
-              key={item.label}
-              variant="subtle"
-              fullWidth
-              onClick={() => navigate(item.path)}
-              styles={{
-                root: {
-                  justifyContent: sidebarOpen ? "flex-start" : "flex-start",
-                  padding: "10px 16px",
-                  borderRadius: "8px",
-                  height: "48px",
-                  backgroundColor: isActive ? "#e3c0f5" : "transparent",
-                  "&:hover": {
-                    backgroundColor: "#e3c0f5",
-                  },
-                },
-              }}
-            >
-              <Flex align="center" gap="12px" style={{ width: "100%" }}>
-                <Box
-                  style={{
-                    width: "24px",
-                    height: "24px",
+                key={item.label}
+                variant="subtle"
+                fullWidth
+                onClick={() => navigate(item.path)}
+                styles={{
+                  root: {
+                    justifyContent: "flex-start",
+                    padding: "10px 16px",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon size={20} />
-                </Box>
-            
-                {sidebarOpen && (
-                  <Text size="sm" fw={600} style={{ whiteSpace: "nowrap" }}>
-                    {item.label}
-                  </Text>
-                )}
-              </Flex>
-            </Button>
-            
-            
+                    borderRadius: "8px",
+                    height: "48px",
+                    backgroundColor: isActive ? "#e3c0f5" : "transparent",
+                    "&:hover": {
+                      backgroundColor: "#e3c0f5",
+                    },
+                  },
+                }}
+              >
+                <Flex align="center" gap="12px" style={{ width: "100%" }}>
+                  <Box
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Icon size={20} />
+                  </Box>
+
+                  {sidebarOpen && (
+                    <Text size="sm" fw={600} style={{ whiteSpace: "nowrap" }}>
+                      {item.label}
+                    </Text>
+                  )}
+                </Flex>
+              </Button>
             );
           })}
         </Paper>
 
         {/* Main Page Content */}
-        <Box style={{ flex: 1, padding: "2rem" }}>
+        <Box style={{ flex: 1, padding: "1rem" }}>
           <Outlet />
         </Box>
       </Flex>

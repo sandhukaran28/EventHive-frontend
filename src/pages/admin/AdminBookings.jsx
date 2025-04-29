@@ -55,8 +55,8 @@ import {
     const handleUpdateBooking = async () => {
       if (!selectedBooking) return;
       try {
-        await axios.patch(
-          `/bookings/${selectedBooking._id}/status`,
+        await axios.put(
+          `/bookings/${selectedBooking._id}`,
           { status: newStatus },
           {
             headers: { Authorization: `Bearer ${user?.token}` },
@@ -100,46 +100,6 @@ import {
           flexDirection: "column",
         }}
       >
-        {/* Top Navbar */}
-        <Paper
-          p="md"
-          radius={0}
-          style={{
-            backgroundColor: "#f4d6ff",
-            borderBottom: "1px solid #b1d0fc",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          <Container size="lg">
-            <Flex justify="space-between" align="center">
-              <Title
-                order={3}
-                style={{ color: "#1a1a1a", fontWeight: 700, cursor: "pointer" }}
-                onClick={() => navigate("/dashboard")}
-              >
-                EventHive
-              </Title>
-  
-              <Button
-                variant="filled"
-                onClick={() => {
-                  logout();
-                  navigate("/login");
-                }}
-                styles={{
-                  root: {
-                    backgroundColor: "#b1d0fc",
-                    color: "#1a1a1a",
-                    fontWeight: 600,
-                    "&:hover": { backgroundColor: "#a2c3f6" },
-                  },
-                }}
-              >
-                Logout
-              </Button>
-            </Flex>
-          </Container>
-        </Paper>
   
         {/* Main Content */}
         <Container size="lg" mt="xl" style={{ flex: 1 }}>

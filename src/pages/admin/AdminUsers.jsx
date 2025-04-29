@@ -113,7 +113,7 @@ export default function AdminUsers() {
           <>
             <Paper shadow="md" radius="md" withBorder>
               <Box style={{ overflowX: "auto", width: "100%" }}>
-                <Table highlightOnHover striped withBorder>
+                <Table highlightOnHover striped withBorder style={{ maxWidth: "80vw" }}>
                   <thead>
                     <tr style={{ backgroundColor: "#f4f4f4" }}>
                       <th style={{ padding: "16px", textAlign: "left" }}>Name</th>

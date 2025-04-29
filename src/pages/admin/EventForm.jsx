@@ -129,7 +129,7 @@ import {
   
             {/* Right Side - Form */}
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <Paper p="xl" shadow="md" radius="md">
+              <Paper p="lg" shadow="md" radius="md">
                 <Title order={3} align="center" mb="lg" style={{ color: "#1a1a1a" }}>
                   {id ? "Edit Event" : "Create Event"}
                 </Title>

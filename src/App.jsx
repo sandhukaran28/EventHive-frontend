@@ -20,7 +20,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminLayout from "./components/AdminLayout";
 
-
 function App() {
   const theme = createTheme({
     fontFamily: "Inter, sans-serif",
@@ -62,10 +61,11 @@ function App() {
               <Route path="/profile" element={<Profile />} />
             </Route>
 
-            {/* Admin Routes */}
             <Route element={<AdminRoute />}>
+              {/* Admin Layout Wrapper */}
               <Route element={<AdminLayout />}>
-                <Route path="/create-event" element={<EventForm />} />
+                <Route path="/admin/dashboard" element={<Dashboard />} />
+                <Route path="/admin/create-event" element={<EventForm />} />
                 <Route path="/edit-event/:id" element={<EventForm />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/bookings" element={<AdminBookings />} />

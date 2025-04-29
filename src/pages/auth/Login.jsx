@@ -54,7 +54,11 @@ export default function Login() {
       setLoggedIn(true);
   
       setTimeout(() => {
-        navigate("/dashboard");
+        if (res.data.user.isAdmin) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }, 2000);
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
