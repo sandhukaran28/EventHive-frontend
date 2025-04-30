@@ -67,7 +67,6 @@ export default function EventDetails() {
     );
   }
 
-  // 🧠 Calculate Available Seats
   const availableSeats = event.capacity;
 
   const handleBooking = async () => {

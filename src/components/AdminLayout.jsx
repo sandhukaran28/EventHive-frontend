@@ -29,7 +29,7 @@ export default function AdminLayout() {
   const handleResize = () => {
     const mobile = window.innerWidth < 768;
     setIsMobile(mobile);
-    setSidebarOpen(!mobile); // Collapse sidebar if mobile
+    setSidebarOpen(!mobile);
   };
 
   useEffect(() => {

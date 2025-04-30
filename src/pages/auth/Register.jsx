@@ -52,9 +52,9 @@ import {
         });
   
         console.log("Registered:", res.data);
-        setRegistered(true); // Show success message
+        setRegistered(true);
   
-        // Delay redirect
+
         setTimeout(() => {
           navigate("/login");
         }, 2000);

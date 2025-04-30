@@ -45,7 +45,7 @@ function App() {
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename="/eventhive">
         <Container fluid size="lg" p={0}>
           <Routes>
             {/* Public Routes */}
