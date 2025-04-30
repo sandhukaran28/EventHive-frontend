@@ -16,9 +16,9 @@ import {
   Notification,
   Grid,
 } from "@mantine/core";
-import axios from "../api/axiosconfig";
-import { useAuth } from "../context/AuthContext";
-import Footer from "../components/Footer";
+import axios from "../../api/axiosconfig";
+import { useAuth } from "../../context/AuthContext";
+import Footer from "../../components/Footer";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -91,7 +91,6 @@ export default function EventDetails() {
       );
       console.log("Booking successful:", res.data);
 
-      // ✅ Instantly update attendees locally
       setEvent((prevEvent) => ({
         ...prevEvent,
         attendees: [...(prevEvent.attendees || []), ...Array(quantity).fill(user.user.id)],
@@ -160,7 +159,7 @@ export default function EventDetails() {
         <Grid gutter="xl" mt="xl">
           {/* Event Details */}
           <Grid.Col span={{ base: 12, md: 7 }}>
-            <Paper p="xl" shadow="md" radius="md">
+            <Paper p="xl" shadow="md" radius="md" >
               <Title order={2} mb="md">
                 {event.title}
               </Title>
@@ -198,64 +197,69 @@ export default function EventDetails() {
 
           {/* Booking Form */}
           <Grid.Col span={{ base: 12, md: 5 }}>
-            <Paper p="xl" shadow="md" radius="md" style={{ backgroundColor: "#f4d6ff" }}>
-              <Title order={4} mb="md">
-                Book Your Spot 🎟️
-              </Title>
+          <Box
+  p="xl"
+class="eventInfo"
+>
 
-              {bookingSuccess && (
-                <Notification color="green" title="Booking Confirmed!" mb="md">
-                  Your tickets have been booked successfully.
-                </Notification>
-              )}
+    <Title order={4} mb="md">
+      Book Your Spot 🎟️
+    </Title>
 
-              {bookingError && (
-                <Notification color="red" title="Booking Failed" mb="md">
-                  {bookingError}
-                </Notification>
-              )}
+    {bookingSuccess && (
+      <Notification color="green" title="Booking Confirmed!" mb="md">
+        Your tickets have been booked successfully.
+      </Notification>
+    )}
 
-              <Text size="sm" color="dimmed" mb="sm">
-                Available Seats: <b>{availableSeats}</b>
-              </Text>
+    {bookingError && (
+      <Notification color="red" title="Booking Failed" mb="md">
+        {bookingError}
+      </Notification>
+    )}
 
-              <TextInput
-                label="Name"
-                value={user?.user?.name || ""}
-                readOnly
-                styles={{ input: { backgroundColor: "white", fontWeight: 500 } }}
-                mb="sm"
-              />
+    <Text size="sm" color="dimmed" mb="sm">
+      Available Seats: <b>{availableSeats}</b>
+    </Text>
 
-              <NumberInput
-                label="Quantity"
-                value={quantity}
-                onChange={setQuantity}
-                min={1}
-                max={availableSeats}
-                styles={{ input: { backgroundColor: "white", fontWeight: 500 } }}
-              />
+    <TextInput
+      label="Name"
+      value={user?.user?.name || ""}
+      readOnly
+      styles={{ input: { backgroundColor: "white", fontWeight: 500 } }}
+      mb="sm"
+    />
 
-              <Button
-                fullWidth
-                mt="xl"
-                onClick={handleBooking}
-                disabled={bookingSuccess}
-                styles={{
-                  root: {
-                    backgroundColor: "#b1d0fc",
-                    color: "#1a1a1a",
-                    fontWeight: 600,
-                    "&:hover": {
-                      backgroundColor: "#a2c3f6",
-                    },
-                  },
-                }}
-              >
-                Confirm Booking
-              </Button>
-            </Paper>
-          </Grid.Col>
+    <NumberInput
+      label="Quantity"
+      value={quantity}
+      onChange={setQuantity}
+      min={1}
+      max={availableSeats}
+      styles={{ input: { backgroundColor: "white", fontWeight: 500 } }}
+    />
+
+    <Button
+      fullWidth
+      mt="xl"
+      onClick={handleBooking}
+      disabled={bookingSuccess}
+      styles={{
+        root: {
+          backgroundColor: "#b1d0fc",
+          color: "#1a1a1a",
+          fontWeight: 600,
+          "&:hover": {
+            backgroundColor: "#a2c3f6",
+          },
+        },
+      }}
+    >
+      Confirm Booking
+    </Button>
+  </Box>
+</Grid.Col>
+
         </Grid>
       </Container>
 

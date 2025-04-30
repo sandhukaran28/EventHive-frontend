@@ -56,7 +56,7 @@ import {
             });
           } catch (error) {
             console.error("Error fetching event:", error.response?.data || error.message);
-            navigate("/dashboard");
+            navigate("/admin/dashboard");
           } finally {
             setLoading(false);
           }
@@ -83,7 +83,7 @@ import {
           });
         }
   
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } catch (error) {
         console.error("Error submitting form:", error.response?.data || error.message);
         alert("Something went wrong. Please try again.");

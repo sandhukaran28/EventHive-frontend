@@ -12,11 +12,11 @@ import {
     Image,
     Group,
   } from "@mantine/core";
-  import { useAuth } from "../context/AuthContext";
+  import { useAuth } from "../../context/AuthContext";
   import { useState } from "react";
-  import axios from "../api/axiosconfig";
+  import axios from "../../api/axiosconfig";
   import { useNavigate } from "react-router-dom";
-  import Footer from "../components/Footer";
+  import Footer from "../../components/Footer";
   
   export default function Profile() {
     const { user, login, logout } = useAuth();
