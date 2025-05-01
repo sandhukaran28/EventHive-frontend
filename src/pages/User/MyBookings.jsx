@@ -202,6 +202,7 @@ export default function MyBookings() {
                       e.currentTarget.style.transform = "scale(1)";
                       e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.05)";
                     }}
+                    className="eventCard"
                   >
                     <Group position="apart" mb="md">
                       <Title order={5} style={{ color: "#1a1a1a" }}>

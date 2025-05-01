@@ -18,6 +18,7 @@ import Footer from "../../components/Footer";
 import { useState } from "react";
 import axios from "../../api/axiosconfig";
 import { useAuth } from "../../context/AuthContext";
+import LoginSVG from '/assets/Login.svg';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ export default function Login() {
           {/* SVG Side */}
           <Grid.Col span={{ base: 12, md: 6 }} visibleFrom="md">
             <Image
-              src="/assets/Login.svg"
+              src={LoginSVG}
               alt="Login Illustration"
               fit="contain"
               width="100%"

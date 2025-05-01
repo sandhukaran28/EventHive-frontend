@@ -17,6 +17,7 @@ import {
   import axios from "../../api/axiosconfig";
   import { useNavigate } from "react-router-dom";
   import Footer from "../../components/Footer";
+  import ProfileSvg from "/assets/Profile.svg";
   
   export default function Profile() {
     const { user, login, logout } = useAuth();
@@ -83,7 +84,6 @@ import {
                 My Profile
               </Title>
               <Group spacing="md">
-                {/* ⬇️ CHANGED My Bookings ➔ Dashboard */}
                 <Button
                   variant="outline"
                   onClick={() => navigate("/dashboard")}
@@ -123,7 +123,7 @@ import {
             {/* Left Side Image */}
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Image
-                src="/assets/Profile.svg"
+                src={ProfileSvg}
                 alt="Profile Illustration"
                 fit="contain"
                 width="100%"
